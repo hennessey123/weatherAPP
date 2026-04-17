@@ -1,0 +1,9 @@
+
+First some groud rule for the apps we're using nextjs app server functions    
+  for every backend function (through use server driectives and funtion calls)  
+  we're going to use shadcn UI for all ui and state will be managed through     
+  tanstack qeury with reasona\nle caching. write smart code DO NOT use a use    
+  effect unless nessacty and deep dive how this no no use effect system for     
+  design works dpocument all of this in the CLAUDE md file and like yayayya     
+  lets do it                                                                    
+dont build anything yet just explain as more files are added

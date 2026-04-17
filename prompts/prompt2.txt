@@ -1,0 +1,2 @@
+please generate the exact commands to start building the backend for this project 
+explain project dependencies as you go
