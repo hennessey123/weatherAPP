@@ -1,0 +1,21 @@
+Write small test cases to verify location search functionality, starting with ZIP code searches
+
+Created `weatherapp/src/app/actions/__tests__/geocode.test.ts` using Vitest with fetch mocking via `vi.fn()` and `vi.restoreAllMocks()` in `beforeEach`.
+
+**ZIP code routing (5 tests)**
+- 5-digit input routes to the ZCTA layer (`PUMA_TAD_TAZ_UGA_ZCTA` URL)
+- 3-digit prefix routes to ZCTA with a `LIKE '900%'` WHERE clause
+- 4-digit prefix routes to ZCTA and returns results
+- Successful reverse lookup enriches the label → `"San Francisco, CA (94102)"`
+- Failed reverse lookup falls back to `"ZIP 99999"` label
+- Failed fetch (non-ok response) returns `[]`
+
+**City search routing (3 tests)**
+- City name queries never hit the ZCTA layer
+- 1-character query returns `[]` without making any network call
+- Empty string returns `[]` without making any network call
+
+**Input sanitization (1 test)**
+- SQL injection payload (`'; DROP TABLE places; --`) is stripped before it reaches the WHERE clause
+
+**Key implementation detail:** `'use server'` files are loaded via `vi.importActual` — the directive is silently ignored in the Node.js test environment, so no stripping or transformation is needed. The `vitest.config.ts` wires up the `@/*` path alias to match `tsconfig.json`.
