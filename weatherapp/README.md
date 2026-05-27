@@ -35,6 +35,6 @@ This repo is configured to deploy the `weatherapp/` app to Vercel through GitHub
 
 After the first production deploy, add the live Vercel URL here:
 
-- Live app: <your-vercel-project-url>
+- Live app: https://weather-app-chi-seven-15.vercel.app
 
 For Vercel project setup, see the [Vercel deployment flow](https://vercel.com/new) and the [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying).
