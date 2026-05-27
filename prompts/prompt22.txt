@@ -1,0 +1,12 @@
+PROMPT:
+how does the tanstack query connect to the server
+
+RESPONSE:
+TanStack Query connects to the server via server functions ('use server'). The pattern is:
+1. Server function (getForecast) lives in app/actions
+2. Client component calls it via TanStack Query's queryFn
+3. queryFn: () => getForecast(searchTerm) — direct function call, no fetch() needed
+4. TanStack Query handles caching, invalidation, background refetch
+5. No HTTP layer — client calls server function directly
+
+Key aspects: caching by queryKey, staleTime tuning (5 min for weather), mutations with invalidateQueries on success, deduplication of requests.

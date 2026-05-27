@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { LocationSearch } from '@/components/location-search'
 import { WeatherDisplay } from '@/components/weather-display'
+import { WeatherAlerts } from '@/components/weather-alerts'
 import { HourlyForecast } from '@/components/hourly-forecast'
 import { DailyForecast } from '@/components/daily-forecast'
 import type { GeocodeMatch } from '@/app/actions/geocode'
@@ -26,6 +27,7 @@ export function WeatherApp() {
         </p>
       </div>
       <LocationSearch onSelect={setLocation} />
+      <WeatherAlerts lat={location.lat} lon={location.lon} />
       <WeatherDisplay
         lat={location.lat}
         lon={location.lon}

@@ -1,0 +1,17 @@
+PROMPT:
+summarize what prompts 18-21 mean for a presentation
+
+RESPONSE:
+Prompts 18–21 represent a complete testing strategy and roadmap:
+- Prompt 18: Test suite overview — 55 passing tests establish baseline coverage
+- Prompt 19: API call precision specs — proves WHERE clauses target exact locations, coordinates pass through untransformed, FIPS codes map correctly
+- Prompt 20: Testing gaps & roadmap — identifies what's NOT tested yet and prioritizes by effort/value
+- Prompt 21: Ranking logic + docs — adds 10 ranking tests and documents practices for future developers
+
+Presentation angle:
+- Prompt 18: "Here's what we test" (scope)
+- Prompt 19: "Here's how we verify correctness" (rigor)
+- Prompt 20: "Here's what's next" (roadmap)
+- Prompt 21: "Here's how we teach future developers" (sustainability)
+
+Together: systematic testing → validated correctness → planned growth → documented practices.

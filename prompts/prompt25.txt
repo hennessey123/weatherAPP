@@ -1,0 +1,12 @@
+PROMPT:
+what does client side entail
+
+RESPONSE:
+Client side = code running in the browser. A file becomes a client component with 'use client' directive, unlocking:
+- useState, useRef, useReducer (React hooks for browser state)
+- useQuery, useMutation (TanStack Query hooks)
+- Event handlers (onClick, onChange)
+- useRouter, useSearchParams (browser navigation)
+- window, document (browser-only APIs)
+
+In weather app: WeatherDisplay.tsx is client ('use client') — it has useState, useQuery, event handlers. geocode.ts is NOT client (it's server). Server components are the default; add 'use client' only when you need interactivity.

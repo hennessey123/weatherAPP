@@ -1,0 +1,14 @@
+PROMPT:
+what other tests should i define
+
+RESPONSE:
+High-value test gaps:
+1. Result ranking — exact city name match ranks before partial ("Austin" beats "Austintown")
+2. Deduplication — same city from layers 4+5 appears once in results
+3. Result limit — searchLocations never returns more than 8 results
+4. Apostrophes in city names — "O'Brien", "Coeur d'Alene" WHERE clause construction
+5. NWS points URL format — lat/lon formatted to 4 decimal places exactly
+6. Hourly forecast capped at 24 — even if NWS returns 156 periods, slice to 24
+7. NWS error propagates — non-ok response throws with status code in message
+
+Recommendation: ranking + deduplication + NWS URL format tests give most coverage for least effort.

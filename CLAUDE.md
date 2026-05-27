@@ -172,3 +172,108 @@ npx shadcn@latest add button card input skeleton
 ```
 
 Customize via `className` and `cn()` utility — don't fork the component source unless absolutely necessary.
+
+---
+
+## 7. Severe Weather Alerts
+
+The app fetches and displays active NWS alerts for any location via `getAlerts(lat, lon)`.
+
+**Server function** (`app/actions/weather.ts`):
+```ts
+export type WeatherAlert = {
+  id: string
+  event: string
+  severity: 'Extreme' | 'Severe' | 'Moderate' | 'Minor' | 'Unknown'
+  headline: string
+  description: string
+  onset: string
+  expires: string
+  areaDesc: string
+}
+
+export async function getAlerts(lat: number, lon: number): Promise<WeatherAlert[]> {
+  // Fetches from https://api.weather.gov/alerts/active?point=lat,lon
+  // Returns array sorted by severity (Extreme first)
+}
+```
+
+**Client component** (`components/weather-alerts.tsx`):
+- Color-coded by severity: red (Extreme), orange (Severe), yellow (Moderate), blue (Minor)
+- Icons: `AlertTriangle` for Extreme/Severe, `AlertCircle` for Moderate, `Info` for Minor
+- Sorted by severity (Extreme first)
+- Shows headline, affected area, event type
+- Returns `null` if no alerts (clean UI when safe)
+- Uses TanStack Query with 5-min staleTime
+
+**Integration**:
+- Appears between location search and weather display in weather-app.tsx
+- Fetches whenever location changes
+- Handles loading and error states gracefully
+
+---
+
+## 8. Test Suite
+
+Run with `npm test` (Vitest). All 76 tests must pass before merging.
+
+### Files
+
+| File | Tests | What it covers |
+|---|---|---|
+| `__tests__/geocode.test.ts` | 10 | ZIP/city routing, input sanitization, error handling |
+| `__tests__/geocode.location-accuracy.test.ts` | 35 | API call precision, coordinate passthrough, label assembly |
+| `__tests__/geocode.ranking.test.ts` | 10 | Result sorting, deduplication, 8-result cap |
+| `__tests__/weather.test.ts` | 21 | Hourly forecast (9), 7-day forecast (5), alerts (7) |
+
+### Geocoding tests (55 total)
+
+**geocode.test.ts — routing and sanitization**
+- ZIP (5-digit) routes to ZCTA layer, city queries do not
+- 3-digit and 4-digit prefixes use `LIKE` wildcard; 5-digit uses exact equality
+- Reverse lookup enriches label; falls back to `"ZIP XXXXX"` when lookup is empty
+- Failed fetch returns `[]`; 1-char and empty queries skip network
+- SQL injection characters are stripped from city names
+
+**geocode.location-accuracy.test.ts — API call precision**
+- *ZIP WHERE clause*: exact 5-digit → `BASENAME='XXXXX'`; prefix → `BASENAME LIKE 'XXX%'`; leading zeros preserved
+- *Coordinate passthrough*: lat/lon from ZCTA centroid appear verbatim in `geometry` param; tested across 3 individual ZIPs and multi-ZIP prefix
+- *Known ZIP → label*: 8 well-known ZIPs verify final `"City, ST (ZIP)"` format and coordinates
+- *City+state FIPS*: 13 query formats each assert correct FIPS code in `STATE=` clause
+- *placeAtPoint fallback*: layer 4 tried first; layer 5 only if layer 4 empty; both empty → `"ZIP XXXXX"`
+
+**geocode.ranking.test.ts — result sorting**
+- Exact BASENAME match always ranks before partial match
+- Within group, larger `AREALAND` ranks first
+- Result set capped at 8 even if API returns more
+- Same city from layers 4+5 deduplicated; same name in different states stays separate
+
+### Weather tests (21 total)
+
+**weather.test.ts — hourly forecast (9 tests)**
+- Returns exactly 24 periods; slices if NWS provides more
+- Data unchanged from NWS — no fabrication
+- Coordinates routed to `/points/` with 4 decimal precision
+- Errors throw with status code
+- Handles fewer than 24 periods gracefully
+
+**weather.test.ts — 7-day forecast (5 tests)**
+- Returns all periods without truncation
+- Data integrity verified (no invented fields)
+- Coordinates routed correctly
+- API errors propagate properly
+
+**weather.test.ts — severe weather alerts (7 tests)**
+- Returns empty array when no active alerts
+- Displays multiple severity levels (Extreme, Severe, Moderate, Minor)
+- Time windows (onset/expires) preserved correctly
+- Coordinates to `/alerts/active` endpoint with 4 decimals
+- Defaults to "Unknown" if severity missing
+- Error handling and real-world Dallas tornado scenario
+
+### Key implementation notes for tests
+
+- `'use server'` files load via `vi.importActual` — directive ignored in Node.js
+- `global.fetch` replaced per test via `vi.fn()`; `vi.restoreAllMocks()` in `beforeEach`
+- `parseFloat` drops trailing zeros — avoid fixture lat/lon ending in `0`
+- `placeAtPoint` tries both layers per ZIP (2 ZIPs × 2 layers = 4 calls); assert on unique coordinate set, not call count

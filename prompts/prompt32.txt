@@ -1,0 +1,23 @@
+PROMPT:
+there arent any severe weather icons showing for anywhere
+
+RESPONSE:
+Created weather-alerts.tsx component with:
+- Displays alerts with color-coded severity (red=Extreme, orange=Severe, yellow=Moderate, blue=Minor)
+- Icons by severity (AlertTriangle for Extreme/Severe, AlertCircle for Moderate, Info for Minor)
+- Sorted by severity (Extreme first)
+- Shows headline, area description, and event type
+- Returns null if no alerts (clean UI when safe)
+
+Integration into weather-app.tsx:
+- Added between search and weather display for prominence
+- Uses TanStack Query with 5-min cache (same pattern as other forecasts)
+- Follows component architecture from CLAUDE.md
+
+Alert display features:
+- Badge showing severity level
+- Event type (Tornado Warning, Thunderstorm, etc.)
+- Affected area name(s)
+- Responsive styling consistent with app
+
+Alerts now appear prominently whenever active for selected location.

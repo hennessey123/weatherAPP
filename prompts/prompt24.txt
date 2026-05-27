@@ -1,0 +1,12 @@
+PROMPT:
+what tech stack would this server function fall under, tanstack or react
+
+RESPONSE:
+Neither. Server functions ('use server') are a Next.js feature. Stack breakdown:
+- 'use server' directive = Next.js (App Router)
+- fetch() calls = Node.js / Web Fetch API
+- Type definitions = TypeScript
+- TanStack Query = NOT in this file (client-side only)
+- React = NOT in this file (client-side only)
+
+geocode.ts is the backend; TanStack Query and React are what call it from the client. Server functions are the backend door — everything goes through them.

@@ -1,0 +1,13 @@
+PROMPT:
+write tests to make sure the hourly forecast isnt hallucinating
+
+RESPONSE:
+Created weather.test.ts with 9 hourly forecast tests across 4 suites:
+1. Exact slice to 24 periods (3 tests) — returns 24 when NWS provides 24; slices when 156; returns fewer if NWS has fewer
+2. Data structure integrity (2 tests) — every returned period matches NWS input exactly (no invention); all required fields present
+3. Coordinate routing (2 tests) — coordinates passed to /points/ with 4 decimal precision; rounding works correctly
+4. Error handling (2 tests) — non-ok response throws with status code; hourly API error propagates
+
+Goal: ensure hourly forecast returns authentic NWS data without hallucination, fabrication, or manipulation.
+
+All tests passing — guarantees data integrity for 24-hour forecasts.

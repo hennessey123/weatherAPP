@@ -58,3 +58,48 @@ export async function getHourlyForecast(
   )
   return data.properties.periods.slice(0, 24)
 }
+
+export type WeatherAlert = {
+  id: string
+  event: string
+  severity: 'Extreme' | 'Severe' | 'Moderate' | 'Minor' | 'Unknown'
+  headline: string
+  description: string
+  onset: string
+  expires: string
+  areaDesc: string
+}
+
+export async function getAlerts(
+  lat: number,
+  lon: number,
+): Promise<WeatherAlert[]> {
+  const la = lat.toFixed(4)
+  const lo = lon.toFixed(4)
+  const url = `https://api.weather.gov/alerts/active?point=${la},${lo}`
+  const data = await nws<{
+    features?: Array<{
+      properties: {
+        id: string
+        event: string
+        severity: string
+        headline: string
+        description: string
+        onset: string
+        expires: string
+        areaDesc: string
+      }
+    }>
+  }>(url)
+
+  return (data.features ?? []).map((f) => ({
+    id: f.properties.id,
+    event: f.properties.event,
+    severity: (f.properties.severity || 'Unknown') as WeatherAlert['severity'],
+    headline: f.properties.headline,
+    description: f.properties.description,
+    onset: f.properties.onset,
+    expires: f.properties.expires,
+    areaDesc: f.properties.areaDesc,
+  }))
+}

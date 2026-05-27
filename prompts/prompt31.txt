@@ -1,0 +1,18 @@
+PROMPT:
+create severe weather alerts simulation as well
+
+RESPONSE:
+Added to weather.ts:
+- New WeatherAlert type (id, event, severity, headline, description, onset, expires, areaDesc)
+- New getAlerts(lat, lon) server function fetching from https://api.weather.gov/alerts/active?point=lat,lon
+
+Created 7 tests in weather.test.ts, Suite 6:
+1. Returns empty array when no alerts
+2. Multiple severity levels — Extreme (Tornado), Severe (Thunderstorm), Moderate (Wind Advisory)
+3. Time windows — onset/expires timestamps preserved correctly
+4. Coordinate routing — 4-decimal precision to /alerts/active
+5. Severity fallback — defaults to "Unknown" if missing
+6. Error handling — throws on API failure with status code
+7. Real-world scenario — Dallas tornado + severe thunderstorm + flood watch simulation
+
+Result: 76 total tests passing (55 geocode + 21 weather). System now detects and handles Extreme/Severe/Moderate/Minor alert severities with complete data integrity.

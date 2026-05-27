@@ -1,0 +1,9 @@
+PROMPT:
+does searching a state name get translated to its abbreviation before calling the server
+
+RESPONSE:
+No — state names are NOT translated on the client. The raw query string goes to the server function unchanged. Server-side parseQuery() does the translation:
+- "Austin Texas" → parseQuery translates "Texas" → "TX" → FIPS "48"
+- Translation happens entirely server-side inside parseQuery before the API call
+- Server function owns the translation logic using STATE_NAME_TO_ABBR and STATE_TO_FIPS mappings
+- Client just passes the search string as-is via TanStack Query

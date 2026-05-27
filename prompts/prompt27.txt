@@ -1,0 +1,16 @@
+PROMPT:
+create tests to prioritize larger cities first, then summarize all tests and put in claude.md
+
+RESPONSE:
+Created 10 ranking tests in geocode.ranking.test.ts across 4 suites:
+- Exact match before partial (3 tests) — "Austin" beats "Austintown" regardless of area
+- Larger area first within group (3 tests) — Portland OR 145M m² before Portland ME 15M m²
+- Result cap at 8 (2 tests)
+- Deduplication (2 tests) — same city from layers 4+5 collapses to one; same name across states stays separate
+
+Updated CLAUDE.md with full test section (section 7):
+- All 3 test files and test counts (55 total)
+- What each suite verifies
+- Key gotchas (trailing zeros in floats, layer fallback call counts, vi.importActual pattern)
+
+All 55 tests passing (10 original + 35 accuracy + 10 ranking).
